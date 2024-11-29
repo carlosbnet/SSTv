@@ -1,0 +1,277 @@
+=======================================================================================SC180
+
+void IRAM_ATTR SSTv::Timer0_ISR()
+{
+     if(sSq == 3)
+        {
+                if(ti < 320)
+                {
+                             if(gbrCnt == 0){audio->tone(1500 + 3.13 * lineBufR[ti],false);}
+                        else if(gbrCnt == 1){audio->tone(1500 + 3.13 * lineBufG[ti],false);}
+                        else if(gbrCnt == 2){audio->tone(1500 + 3.13 * lineBufB[ti],false);}
+                                       }
+                else if(ti == 320)
+                {
+                         //    if(gbrCnt == 0){setFreq(1500);}
+                       // else if(gbrCnt == 1){setFreq(1200);}
+                        //if(gbrCnt == 2){audio->tone(1200,false);}
+                        syncTime = micros();
+                        sSq = 4;
+                }
+                ti++;
+        }
+}
+
+
+
+
+void SSTv::sc180(uint8_t *** Pixels,uint16_t height,uint16_t width){
+
+  visCode(VISSC180);
+
+  phyLayer->transmitDirect();
+
+for (size_t h = 0; h < height; h++) {
+
+  syncTime = micros();
+  audio->tone(1200,false);
+  while(micros() - syncTime < syncPulse){}
+
+  syncTime = micros();
+  audio->tone(1500,false);
+  while(micros() - syncTime < syncPorch){}
+
+
+ for (size_t i = 0; i < width; i++) {
+   audio->tone(1500 + (Pixels[h][i][0] * 3.1372),false);
+  }
+
+ 
+ for (size_t i = 0; i < width; i++) {
+ 
+  syncTime = micros();
+  audio->tone(1500 + (Pixels[h][i][1] * 3.1372),false);
+  while(micros() - syncTime < 734){}
+
+ }
+
+
+
+ for (size_t i = 0; i < width; i++) {
+ 
+  syncTime = micros();
+  audio->tone(1500 + (Pixels[h][i][2] * 3.1372),false);
+  while(micros() - syncTime < 734){}
+
+ }
+  /*
+   //Red scan
+   ti = 0; gbrCnt = 0; sSq = 3;
+   while(sSq == 3){};
+
+  //Green scan
+    ti = 0; gbrCnt = 1; sSq = 3;
+    while(sSq == 3){};
+
+   //Blue scan
+   ti = 0; gbrCnt = 2; sSq = 3;
+   while(sSq == 3){};
+*/
+
+}
+audio->noTone();
+//hspi->end();
+}
+=======================================================================================SC180
+
+
+=======================================================================================ROBOT36
+void SSTv::robot36(uint8_t *** Pixels,uint16_t height,uint16_t width){
+
+uint16_t nLine = 0;
+uint16_t lineEven,lineOdd;
+
+
+visCode(VISRB36);
+
+
+  phyLayer->transmitDirect();
+
+  while (nLine != height) {
+
+  lineEven = nLine;
+  lineOdd = nLine+1;
+  
+
+  //changeTimer(YScan);
+
+    for (size_t i = 0; i < width; i++) {
+  
+      Y_even[i] = 16.0 + (.003906 * ((65.738 * Pixels[lineEven][i][0]) + (129.057 * Pixels[lineEven][i][1]) + (25.064 * Pixels[lineEven][i][2])));
+      RY[i] = 128.0 + (.003906 * ((112.439 * Pixels[lineEven][i][0]) + (-94.154 * Pixels[lineEven][i][1]) + (-18.285 * Pixels[lineEven][i][2])));
+
+
+    }
+
+
+  //Sync pulse
+  syncTime = micros();
+  audio->tone(1200,false);
+  while(micros() - syncTime < syncPulse){}
+
+
+  //Sync porch
+  syncTime = micros();
+  audio->tone(1500,false);
+  while(micros() - syncTime < syncPorch){}
+  
+  //Y scan;
+  ti = 0; gbrCnt = 0; sSq = 3;
+  while(sSq == 3){};
+
+  //changeTimer(RByScan);
+
+for (size_t i = 0; i < width; i++) {
+      Y_odd[i] = 16.0 + (.003906 * ((65.738 * Pixels[lineOdd][i][0]) + (129.057 * Pixels[lineOdd][i][1]) + (25.064 * Pixels[lineOdd][i][2])));
+      BY[i] = 128.0 + (.003906 * ((-37.945 * Pixels[lineOdd][i][0]) + (-74.494 * Pixels[lineOdd][i][1]) + (112.439 * Pixels[lineOdd][i][2])));
+}
+  
+  //Even separator
+  syncTime = micros();
+  audio->tone(1500,false);  
+  while(micros() - syncTime < sepaPulse){}
+    //porch
+  syncTime = micros();
+  audio->tone(1900,false);
+  while(micros() - syncTime < porch){}
+ 
+
+    //R-Y scan 
+  ti = 0; gbrCnt = 1; sSq = 2;
+  while(sSq == 2){};
+
+  //changeTimer(YScan);
+
+  //Sync pulse
+  syncTime = micros();
+  audio->tone(1200,false);
+  while(micros() - syncTime < syncPulse){}  
+
+
+  //Sync porch
+  syncTime = micros();
+  audio->tone(1500,false);
+  while(micros() - syncTime < syncPorch){}
+    
+  
+  //Y scan
+  ti = 0; gbrCnt = 2; sSq = 3;
+  while(sSq == 3){};
+
+  
+  //changeTimer(RByScan);
+    
+  //Odd separator pulse
+  syncTime = micros();
+  audio->tone(2300,false);
+  while (micros() - syncTime < sepaPulse){}
+
+  
+  //porch
+  syncTime = micros();
+  audio->tone(1900,false);
+  while (micros() - syncTime < porch){}
+    
+  
+  //B-Y scan
+  ti = 0; gbrCnt = 3; sSq = 2;
+  while(sSq == 2){};
+
+  
+  //changeTimer(YScan);
+
+  
+  nLine+=2; 
+  
+  }
+
+  audio->noTone();
+  //hspi->end();
+
+}
+
+=======================================================================================ROBOT36
+
+void IRAM_ATTR SSTv::Timer0_ISR_Robot()
+{
+     if(sSq == 3)
+        {
+                if(ti < 320)
+                {
+                             if(gbrCnt == 0){audio->tone(1500 + (3.13 * Y_even[ti]),false);}
+                        //else if(gbrCnt == 1){audio->tone(1500 + (3.13 * RY[ti])    ,false);}
+                        else if(gbrCnt == 2){audio->tone(1500 + (3.13 * Y_odd[ti]) ,false);}
+                       // else if(gbrCnt == 3){audio->tone(1500 + (3.13 * BY[ti])    ,false);}
+
+                }
+                else if(ti == 320)
+                {
+                         //      if(gbrCnt == 0){audio->tone(1500,false);}
+                         // else if(gbrCnt == 1){audio->tone(1200,false);}
+                         //else if(gbrCnt == 2){audio->tone(2300,false);}
+                         // else if(gbrCnt == 3){audio->tone(1200,false);}
+  
+                        //syncTime = micros();
+                        sSq = 4;
+                }
+                ti++;
+        }
+}
+void IRAM_ATTR SSTv::Timer1_ISR_Robot()
+{
+     if(sSq == 2)
+        {
+                if(ti < 320)
+                {
+                          //   if(gbrCnt == 0){audio->tone(1500 + (3.13 * Y_even[ti]),false);}
+                             if(gbrCnt == 1){audio->tone(1500 + (3.13 * RY[ti])    ,false);}
+                       // else if(gbrCnt == 2){audio->tone(1500 + (3.13 * Y_odd[ti]) ,false);}
+                        else if(gbrCnt == 3){audio->tone(1500 + (3.13 * BY[ti])    ,false);}
+
+                }
+                else if(ti == 320)
+                {
+                         //      if(gbrCnt == 0){audio->tone(1500,false);}
+                         // else if(gbrCnt == 1){audio->tone(1200,false);}
+                         //else if(gbrCnt == 2){audio->tone(2300,false);}
+                         // else if(gbrCnt == 3){audio->tone(1200,false);}
+  
+                        //syncTime = micros();
+                        sSq = 4;
+                }
+                ti++;
+        }
+}
+
+
+
+
+void SSTv::beginTime(){
+
+//    Timer0_Cfg = timerBegin(0, 80, true);
+//    timerAttachInterrupt(Timer0_Cfg, &Timer0_ISR, true);
+//s    timerAlarmWrite(Timer0_Cfg, 732, true);
+//    timerAlarmEnable(Timer0_Cfg);
+
+    Timer0_Cfg = timerBegin(0, 80, true);
+    Timer1_Cfg = timerBegin(1,80,  true);
+    timerAttachInterrupt(Timer0_Cfg, &Timer0_ISR_Robot, true);
+    timerAttachInterrupt(Timer1_Cfg, &Timer1_ISR_Robot, true);
+    timerAlarmWrite(Timer0_Cfg, YScan, true);
+    timerAlarmWrite(Timer1_Cfg, RByScan, true);
+    timerAlarmEnable(Timer0_Cfg);
+    timerAlarmEnable(Timer1_Cfg);
+
+
+}
+
