@@ -24,10 +24,10 @@ void setup()
     {
         cam.init();
         cam.takePicture();
-        // Pixels = img.loadImage(&height, &width);
-        // sstv.begin(1, ROBOT36);
-        // sstv.sendImage(Pixels, height, width, ROBOT36);
-        // img.imageFree(Pixels, height, width);
+        Pixels = img.loadImage(&height, &width);
+        sstv.begin(1, ROBOT36);
+        sstv.sendImage(Pixels, height, width, ROBOT36);
+        img.imageFree(Pixels, height, width);
 
         delay(5000);
     }
