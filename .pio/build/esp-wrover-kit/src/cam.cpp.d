@@ -146,4 +146,5 @@
  /home/carlos/.platformio/packages/framework-arduinoespressif32/libraries/SPI/src/SPI.h \
  /home/carlos/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-spi.h \
  /home/carlos/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-psram.h \
- /home/carlos/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp32-camera/driver/include/sensor.h
+ /home/carlos/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp32-camera/driver/include/sensor.h \
+ include/utils.h

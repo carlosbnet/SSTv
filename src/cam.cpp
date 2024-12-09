@@ -3,6 +3,7 @@
 #include "esp32-hal-psram.h"
 #include "img_converters.h"
 #include "sensor.h"
+#include "utils.h"
 #include <esp_camera.h>
 
 #define PWDN_GPIO_NUM 32
@@ -23,7 +24,9 @@
 #define HREF_GPIO_NUM 23
 #define PCLK_GPIO_NUM 22
 
-Ssd card;
+Ssd sdC;
+
+camera_config_t config;
 
 Cam::Cam()
 {
@@ -32,7 +35,6 @@ Cam::Cam()
 void Cam::init()
 {
 
-    camera_config_t config;
     config.ledc_channel = LEDC_CHANNEL_0;
     config.ledc_timer = LEDC_TIMER_0;
     config.pin_d0 = Y2_GPIO_NUM;
@@ -53,31 +55,45 @@ void Cam::init()
     config.pin_reset = RESET_GPIO_NUM;
     config.xclk_freq_hz = 20000000;
     config.pixel_format = PIXFORMAT_JPEG;
+    config.frame_size = FRAMESIZE_QVGA;
+    config.jpeg_quality = 10;
+    config.fb_count = 2;
 
-    if (psramFound())
-    {
-        config.frame_size = FRAMESIZE_QVGA; // FRAMESIZE_ + QVGA|CIF|VGA|SVGA|XGA|SXGA|UXGA
-        config.jpeg_quality = 10;
-        config.fb_count = 2;
-    }
-    else
-    {
-        config.frame_size = FRAMESIZE_QVGA;
-        config.jpeg_quality = 12;
-        config.fb_count = 1;
-    }
+    /*
+      if (psramFound())
+      {
+          config.frame_size = FRAMESIZE_QVGA; // FRAMESIZE_ + QVGA|CIF|VGA|SVGA|XGA|SXGA|UXGA
+          config.jpeg_quality = 10;
+          config.fb_count = 2;
+      }
+      else
+      {
+          config.frame_size = FRAMESIZE_QVGA;
+          config.jpeg_quality = 12;
+          config.fb_count = 1;
+      }
+
+      // Init Camera
+      esp_err_t err = esp_camera_init(&config);
+      if (err != ESP_OK)
+      {
+          Serial.printf("Camera init failed with error 0x%x", err);
+          return;
+      }*/
+}
+
+void Cam::takePicture()
+{
 
     // Init Camera
     esp_err_t err = esp_camera_init(&config);
     if (err != ESP_OK)
     {
-        Serial.printf("Camera init failed with error 0x%x", err);
+        sdC.LOG(LOG_TYPE_CAM, "Camera init failed with error ");
         return;
     }
-}
 
-void Cam::takePicture()
-{
+    sdC.LOG(LOG_TYPE_CAM, "Camera init");
 
     camera_fb_t *fb = NULL;
 
@@ -85,7 +101,7 @@ void Cam::takePicture()
 
     if (!fb)
     {
-        Serial.println("Camera capture failed");
+        sdC.LOG(LOG_TYPE_CAM, "Camera capture failed");
         return;
     }
 
@@ -96,11 +112,12 @@ void Cam::takePicture()
 
     frame2bmp(fb, &bufferBmp, &bufferLength);
 
-    card.saveImage(bufferBmp, bufferLength);
+    sdC.saveImage(bufferBmp, bufferLength);
 
     esp_camera_fb_return(fb);
     free(bufferBmp);
-    Serial.println("Foto Gravada...");
 
     esp_camera_deinit();
+
+    sdC.LOG(LOG_TYPE_CAM, "Camera deinit");
 }

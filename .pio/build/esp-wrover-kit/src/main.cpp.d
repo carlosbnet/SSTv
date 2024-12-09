@@ -145,9 +145,7 @@
  /home/carlos/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp32-camera/driver/include/sensor.h \
  /home/carlos/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp32-camera/conversions/include/img_converters.h \
  /home/carlos/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp32-camera/conversions/include/esp_jpg_decode.h \
- /home/carlos/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal.h \
- include/img.h include/sstv.h \
- .pio/libdeps/esp-wrover-kit/MD_AD9833/src/MD_AD9833.h \
+ include/sstv.h .pio/libdeps/esp-wrover-kit/MD_AD9833/src/MD_AD9833.h \
  .pio/libdeps/esp-wrover-kit/RadioLib/src/RadioLibC.h \
  .pio/libdeps/esp-wrover-kit/RadioLib/src/TypeDef.h \
  .pio/libdeps/esp-wrover-kit/RadioLib/src/BuildOptUser.h \

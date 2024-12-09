@@ -3,13 +3,10 @@
 #include "Arduino.h" //Requerido
 #include "SPI.h"     // Requerido
 #include "cam.h"
-#include "esp32-hal.h"
-#include "img.h"
 #include "sstv.h"
 
 Cam cam;
-img img;
-
+Ssd sd;
 SSTv sstv(434.00);
 
 uint8_t ***Pixels = NULL;
