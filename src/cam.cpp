@@ -89,11 +89,11 @@ void Cam::takePicture()
     esp_err_t err = esp_camera_init(&config);
     if (err != ESP_OK)
     {
-        sdC.LOG(LOG_TYPE_CAM, "Camera init failed with error ");
+        sdC.LOG(LOG_TYPE_CAM, "Camera init failed with error ", 1);
         return;
     }
 
-    sdC.LOG(LOG_TYPE_CAM, "Camera init");
+    sdC.LOG(LOG_TYPE_CAM, "Camera init", 1);
 
     camera_fb_t *fb = NULL;
 
@@ -101,7 +101,7 @@ void Cam::takePicture()
 
     if (!fb)
     {
-        sdC.LOG(LOG_TYPE_CAM, "Camera capture failed");
+        sdC.LOG(LOG_TYPE_CAM, "Camera capture failed", 1);
         return;
     }
 
@@ -119,5 +119,5 @@ void Cam::takePicture()
 
     esp_camera_deinit();
 
-    sdC.LOG(LOG_TYPE_CAM, "Camera deinit");
+    sdC.LOG(LOG_TYPE_CAM, "Camera deinit", 1);
 }

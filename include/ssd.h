@@ -16,7 +16,7 @@ class Ssd
     void initSD();
     void disableSD();
     bool activeSD = false;
-    void LOG(const char *type_message, const char *message);
+    void LOG(const char *type_message, const char *message, bool close);
     void imageFree(uint8_t ***Pixels, int height, int width);
 
   private:

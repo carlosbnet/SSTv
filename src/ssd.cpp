@@ -6,6 +6,7 @@
 #include <EEPROM.h>
 #include <FS.h>
 #include <SD_MMC.h>
+#include <cstdint>
 
 #define EEPROM_SIZE 1
 #define EEPROM_ADRRESS 0
@@ -76,30 +77,29 @@ void Ssd::saveImage(uint8_t *data, size_t dlength)
 
     fs::FS &fs = SD_MMC;
 
-    LOG(LOG_TYPE_SD, path.c_str());
-
+    LOG(LOG_TYPE_SD, path.c_str(), 0);
     File file = fs.open(path.c_str(), FILE_WRITE);
 
     if (!file)
     {
-        LOG(LOG_TYPE_SD, "Failed to open file in writing mode");
+        LOG(LOG_TYPE_SD, "Failed to open file in writing mode", 0);
     }
     else
     {
         file.write(data, dlength); // payload (image), payload length
-        LOG(LOG_TYPE_SD, "Saved file to path");
+        LOG(LOG_TYPE_SD, "Saved file to path", 0);
         EEPROM.write(0, pictureNumber);
         EEPROM.commit();
     }
 
     file.close();
 
-    LOG(LOG_TYPE_SD, "Saved image;");
+    LOG(LOG_TYPE_SD, "Saved image;", 0);
 
     disableSD();
 }
 
-void Ssd::LOG(const char *type_message, const char *message)
+void Ssd::LOG(const char *type_message, const char *message, bool close)
 {
 
     if (!activeSD)
@@ -112,7 +112,10 @@ void Ssd::LOG(const char *type_message, const char *message)
     file.println(line);
     file.close();
 
-    disableSD();
+    if (close)
+    {
+        disableSD();
+    }
 }
 
 uint8_t ***Ssd::loadImage(int *height, int *width)
@@ -133,11 +136,11 @@ uint8_t ***Ssd::loadImage(int *height, int *width)
 
     File image = fs.open(path.c_str(), FILE_READ);
 
-    LOG(LOG_TYPE_SD, path.c_str());
+    LOG(LOG_TYPE_SD, path.c_str(), 0);
 
     if (!image)
     {
-        LOG(LOG_TYPE_SD, "Failed to open file in reading mode");
+        LOG(LOG_TYPE_SD, "Failed to open file in reading mode", 0);
     }
 
     uint8_t imgInf[sizeof(InfoHeader_t)];
@@ -192,7 +195,7 @@ uint8_t ***Ssd::loadImage(int *height, int *width)
 
     image.close();
 
-    LOG(LOG_TYPE_SD, "Image Load to PSRAM;");
+    LOG(LOG_TYPE_SD, "Image Load to PSRAM;", 0);
 
     disableSD();
 
