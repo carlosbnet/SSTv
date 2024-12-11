@@ -1,6 +1,8 @@
 #include "ssd.h"
 // #include "SD.h"
 #include "SPI.h"
+#include "esp32-hal-psram.h"
+#include "esp_heap_caps.h"
 #include "utils.h"
 #include <Arduino.h>
 #include <EEPROM.h>
@@ -118,7 +120,7 @@ void Ssd::LOG(const char *type_message, const char *message, bool close)
     }
 }
 
-uint8_t ***Ssd::loadImage(int *height, int *width)
+uint8_t *Ssd::loadImage()
 {
 
     if (!activeSD)
@@ -143,6 +145,8 @@ uint8_t ***Ssd::loadImage(int *height, int *width)
         LOG(LOG_TYPE_SD, "Failed to open file in reading mode", 0);
     }
 
+    heap_caps_check_integrity_all(true);
+
     uint8_t imgInf[sizeof(InfoHeader_t)];
     uint8_t imgHea[sizeof(Header_t)];
 
@@ -157,27 +161,17 @@ uint8_t ***Ssd::loadImage(int *height, int *width)
 
     image.seek(header.dataOffset);
 
-    *width = infoHeader.width;
-    *height = -1 * infoHeader.height; //< 0 ? infoHeader.height * -1: infoHeader.height;
+    // uint8_t *Pixels = (uint8_t *)ps_malloc(HEIGHT * WIDTH * 3 * sizeof(uint8_t));
+    uint8_t *Pixels = (uint8_t *)heap_caps_malloc((WIDTH * HEIGHT * CHANNELS * sizeof(uint8_t)), MALLOC_CAP_SPIRAM);
 
-    uint8_t ***Pixels = (uint8_t ***)ps_malloc(*height * sizeof(uint8_t ***));
+    heap_caps_check_integrity_all(true);
 
-    for (int x = 0; x != *height; x++)
+    for (int y = 0; y < HEIGHT; y++)
     {
-
-        Pixels[x] = (uint8_t **)ps_malloc(*width * sizeof(uint8_t **));
-
-        for (size_t y = 0; y != *width; y++)
+        for (int x = 0; x < WIDTH; x++)
         {
-
-            Pixels[x][y] = (uint8_t *)ps_malloc(3 * sizeof(uint8_t));
-        }
-    }
-
-    for (int x = 0; x < *height; x++)
-    {
-        for (int y = 0; y < *width; y++)
-        {
+            // int indx = (x * HEIGHT + y) * CHANNELS;
+            int indx = (y * WIDTH + x) * CHANNELS;
 
             uint8_t R;
             uint8_t G;
@@ -187,9 +181,9 @@ uint8_t ***Ssd::loadImage(int *height, int *width)
             image.read(&G, sizeof(G));
             image.read(&R, sizeof(R));
 
-            Pixels[x][y][0] = R;
-            Pixels[x][y][1] = G;
-            Pixels[x][y][2] = B;
+            Pixels[indx] = R;
+            Pixels[indx + 1] = G;
+            Pixels[indx + 2] = B;
         }
     }
 
@@ -200,22 +194,4 @@ uint8_t ***Ssd::loadImage(int *height, int *width)
     disableSD();
 
     return Pixels;
-}
-
-void Ssd::imageFree(uint8_t ***Pixels, int height, int width)
-{
-
-    for (int x = 0; x != height; x++)
-    {
-        for (size_t y = 0; y != width; y++)
-        {
-
-            free(Pixels[x][y]);
-        }
-        free(Pixels[x]);
-    }
-
-    free(Pixels);
-
-    Pixels = NULL;
 }

@@ -144,6 +144,7 @@
  /home/carlos/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp32-camera/conversions/include/esp_jpg_decode.h \
  /home/carlos/.platformio/packages/framework-arduinoespressif32/libraries/SPI/src/SPI.h \
  /home/carlos/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-spi.h \
+ /home/carlos/.platformio/packages/framework-arduinoespressif32/cores/esp32/esp32-hal-psram.h \
  include/utils.h \
  /home/carlos/.platformio/packages/framework-arduinoespressif32/libraries/EEPROM/src/EEPROM.h \
  /home/carlos/.platformio/packages/framework-arduinoespressif32/libraries/SD_MMC/src/SD_MMC.h \

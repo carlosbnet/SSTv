@@ -1,4 +1,6 @@
 #include "sstv.h"
+#include "ssd.h"
+#include <cstdint>
 
 volatile long syncTime;
 volatile float Y_even;
@@ -121,7 +123,7 @@ void SSTv::visCode(VIS mode)
     }
 }
 
-void SSTv::sendImage(uint8_t ***Pixels, uint16_t height, uint16_t width, SStvMode mode)
+void SSTv::sendImage(uint8_t *Pixels, uint16_t height, uint16_t width, SStvMode mode)
 {
 
     switch (mode)
@@ -140,7 +142,7 @@ void SSTv::sendImage(uint8_t ***Pixels, uint16_t height, uint16_t width, SStvMod
     }
 }
 
-void SSTv::robot36(uint8_t ***Pixels, uint16_t height, uint16_t width)
+void SSTv::robot36(uint8_t *Pixels, uint16_t height, uint16_t width)
 {
 
     uint16_t nLine = 0;
@@ -161,9 +163,9 @@ void SSTv::robot36(uint8_t ***Pixels, uint16_t height, uint16_t width)
 
         for (size_t i = 0; i < width; i++)
         {
-
-            Y_even = 16.0 + (.003906 * ((65.738 * Pixels[lineEven][i][0]) + (129.057 * Pixels[lineEven][i][1]) +
-                                        (25.064 * Pixels[lineEven][i][2])));
+            int indx = (lineEven * width + i) * 3;
+            Y_even = 16.0 +
+                     (.003906 * ((65.738 * Pixels[indx]) + (129.057 * Pixels[indx + 1]) + (25.064 * Pixels[indx + 2])));
             this->tone(1500 + (Y_even * 3.1372), YScan);
         }
 
@@ -173,8 +175,9 @@ void SSTv::robot36(uint8_t ***Pixels, uint16_t height, uint16_t width)
         for (size_t i = 0; i < width; i++)
         {
 
-            RY = 128.0 + (.003906 * ((112.439 * Pixels[lineEven][i][0]) + (-94.154 * Pixels[lineEven][i][1]) +
-                                     (-18.285 * Pixels[lineEven][i][2])));
+            int indx = (lineEven * width + i) * 3;
+            RY = 128.0 +
+                 (.003906 * ((112.439 * Pixels[indx]) + (-94.154 * Pixels[indx + 1]) + (-18.285 * Pixels[indx + 2])));
             this->tone(1500 + (RY * 3.1372), RByScan);
         }
 
@@ -184,8 +187,9 @@ void SSTv::robot36(uint8_t ***Pixels, uint16_t height, uint16_t width)
         for (size_t i = 0; i < width; i++)
         {
 
-            Y_odd = 16.0 + (.003906 * ((65.738 * Pixels[lineOdd][i][0]) + (129.057 * Pixels[lineOdd][i][1]) +
-                                       (25.064 * Pixels[lineOdd][i][2])));
+            int indx = (lineOdd * width + i) * 3;
+            Y_odd = 16.0 +
+                    (.003906 * ((65.738 * Pixels[indx]) + (129.057 * Pixels[indx + 1]) + (25.064 * Pixels[indx + 2])));
 
             this->tone(1500 + (Y_odd * 3.1372), YScan);
         }
@@ -196,8 +200,9 @@ void SSTv::robot36(uint8_t ***Pixels, uint16_t height, uint16_t width)
         for (size_t i = 0; i < width; i++)
         {
 
-            BY = 128.0 + (.003906 * ((-37.945 * Pixels[lineOdd][i][0]) + (-74.494 * Pixels[lineOdd][i][1]) +
-                                     (112.439 * Pixels[lineOdd][i][2])));
+            int indx = (lineOdd * width + i) * 3;
+            BY = 128.0 +
+                 (.003906 * ((-37.945 * Pixels[indx]) + (-74.494 * Pixels[indx + 1]) + (112.439 * Pixels[indx + 2])));
             this->tone(1500 + (BY * 3.1372), RByScan);
         }
 
@@ -208,7 +213,7 @@ void SSTv::robot36(uint8_t ***Pixels, uint16_t height, uint16_t width)
     vspi->end();
 }
 
-void SSTv::sc180(uint8_t ***Pixels, uint16_t height, uint16_t width)
+void SSTv::sc180(uint8_t *Pixels, uint16_t height, uint16_t width)
 {
 
     visCode(VISSC180);
@@ -223,17 +228,21 @@ void SSTv::sc180(uint8_t ***Pixels, uint16_t height, uint16_t width)
 
         for (size_t i = 0; i < width; i++)
         {
-            this->tone(1500 + float(Pixels[h][i][0] * 3.1372), lineScan);
+
+            int indx = (h * width + i) * 3;
+            this->tone(1500 + float(Pixels[indx] * 3.1372), lineScan);
         }
 
         for (size_t i = 0; i < width; i++)
         {
-            this->tone(1500 + float(Pixels[h][i][1] * 3.1372), lineScan);
+            int indx = (h * width + i) * 3;
+            this->tone(1500 + float(Pixels[indx + 1] * 3.1372), lineScan);
         }
 
         for (size_t i = 0; i < width; i++)
         {
-            this->tone(1500 + float(Pixels[h][i][2] * 3.1372), lineScan);
+            int indx = (h * width + i) * 3;
+            this->tone(1500 + float(Pixels[indx + 2] * 3.1372), lineScan);
         }
     }
 

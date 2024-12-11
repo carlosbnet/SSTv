@@ -163,4 +163,5 @@
  .pio/libdeps/esp-wrover-kit/RadioLib/src/protocols/AFSK/AFSK.h \
  .pio/libdeps/esp-wrover-kit/RadioLib/src/protocols/AFSK/../../TypeDef.h \
  .pio/libdeps/esp-wrover-kit/RadioLib/src/protocols/AFSK/../../Module.h \
- .pio/libdeps/esp-wrover-kit/RadioLib/src/protocols/AFSK/../PhysicalLayer/PhysicalLayer.h
+ .pio/libdeps/esp-wrover-kit/RadioLib/src/protocols/AFSK/../PhysicalLayer/PhysicalLayer.h \
+ include/utils.h

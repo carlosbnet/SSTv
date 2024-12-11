@@ -10,7 +10,8 @@
 #define LOG_TYPE_SSTV "[SSTV: ]"
 #define LOG_TYPE_SD "[SD: ]"
 
-#define HEIGHT 240
+#define HEIGHT 256
 #define WIDTH 320
+#define CHANNELS 3
 
 #endif // !utils_h

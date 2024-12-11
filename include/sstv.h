@@ -34,9 +34,9 @@ class SSTv
 
     void tone(float freq, unsigned long time);
     void visCode(VIS mode);
-    void sendImage(uint8_t ***Pixels, uint16_t height, uint16_t width, SStvMode mode);
-    void robot36(uint8_t ***Pixels, uint16_t height, uint16_t width);
-    void sc180(uint8_t ***Pixels, uint16_t height, uint16_t width);
+    void sendImage(uint8_t *Pixels, uint16_t height, uint16_t width, SStvMode mode);
+    void robot36(uint8_t *Pixels, uint16_t height, uint16_t width);
+    void sc180(uint8_t *Pixels, uint16_t height, uint16_t width);
     void configTimer(float corretion, SStvMode mode);
     void close();
     SPIClass *vspi;

@@ -13,6 +13,7 @@ class Ssd
     Ssd();
     void saveImage(uint8_t *data, size_t dlength);
     uint8_t ***loadImage(int *height, int *width);
+    uint8_t *loadImage();
     void initSD();
     void disableSD();
     bool activeSD = false;

@@ -153,4 +153,14 @@
  .pio/libdeps/esp-wrover-kit/RadioLib/src/protocols/AFSK/AFSK.h \
  .pio/libdeps/esp-wrover-kit/RadioLib/src/protocols/AFSK/../../TypeDef.h \
  .pio/libdeps/esp-wrover-kit/RadioLib/src/protocols/AFSK/../../Module.h \
- .pio/libdeps/esp-wrover-kit/RadioLib/src/protocols/AFSK/../PhysicalLayer/PhysicalLayer.h
+ .pio/libdeps/esp-wrover-kit/RadioLib/src/protocols/AFSK/../PhysicalLayer/PhysicalLayer.h \
+ include/ssd.h \
+ /home/carlos/.platformio/packages/framework-arduinoespressif32/libraries/FS/src/FS.h \
+ /home/carlos/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp32-camera/driver/include/esp_camera.h \
+ /home/carlos/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/driver/include/driver/ledc.h \
+ /home/carlos/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/hal/include/hal/ledc_types.h \
+ /home/carlos/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/driver/include/driver/periph_ctrl.h \
+ /home/carlos/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/soc/esp32/include/soc/periph_defs.h \
+ /home/carlos/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp32-camera/driver/include/sensor.h \
+ /home/carlos/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp32-camera/conversions/include/img_converters.h \
+ /home/carlos/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp32-camera/conversions/include/esp_jpg_decode.h
